@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft AI Tour : KT part</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+    <style>
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background: radial-gradient(circle at top right, #004e92, #000428);
+            color: white;
+            margin: 0;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* 키 비주얼 배경 효과 */
+        .bg-curves {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            opacity: 0.6;
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.1) 0%, transparent 50%),
+                        linear-gradient(225deg, rgba(72, 198, 239, 0.1) 0%, transparent 50%);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+            border-color: #00f2fe;
+        }
+
+        .btn-gradient {
+            background: linear-gradient(90deg, #ec008c 0%, #fc6767 100%);
+            transition: all 0.3s;
+        }
+
+        .btn-gradient:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        /* 화면 전환을 위한 클래스 */
+        .step-content { 
+            display: none; 
+            min-height: 100vh;
+        }
+        .step-content.active { 
+            display: flex; 
+            flex-direction: column;
+            animation: fadeIn 0.4s ease-out forwards; 
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .keyword-badge {
+            background: rgba(0, 242, 254, 0.15);
+            color: #00f2fe;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-curves"></div>
+
+    <div class="max-w-md mx-auto w-full px-6 py-8">
+        
+        <!-- STEP 1: 대기 화면 -->
+        <div id="step1" class="step-content active justify-center">
+            
+            <!-- 상단 파트너십 로고 -->
+            <div class="flex justify-center w-full mb-8 pt-2">
+                <img src="https://enterprise.kt.com/entpf/images/product/webResource/msLogo.png" 
+                     alt="KT x Microsoft" 
+                     class="h-8 md:h-9 object-contain">
+            </div>
+
+
+            <!-- 신규 추가된 히어로 이미지 -->
+            <div class="relative w-full mb-8">
+                <!-- 이미지 뒤 네온 글로우 효과 -->
+                <div class="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-500 blur-xl opacity-30 rounded-2xl"></div>
+                <!-- 실제 이미지 -->
+                <img src="https://news.microsoft.com/source/asia/wp-content/uploads/2026/03/SaveTheDate_MS-AI-Tour_FY26_Generic-e1772672566710-1585x1268.png" 
+                     alt="Microsoft AI Tour Key Visual" 
+                     class="relative w-full h-auto rounded-2xl shadow-2xl border border-white/10 object-cover">
+            </div>
+
+            <!-- 도슨트 안내 문구 -->
+            <div class="pb-6 text-center">
+                <p class="text-cyan-400 font-medium mb-3 text-lg">✦ KT AI 도슨트 서비스</p>
+                <h2 class="text-3xl font-bold leading-snug">지금 내 업무,<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">어디서 막히고 있나요?</span></h2>
+                <p class="text-gray-400 mt-4 text-sm break-keep">AI가 딱 맞는 KT의 AX 솔루션 부스로 안내해드립니다.</p>
+            </div>
+
+            <button onclick="goToStep(2)" class="btn-gradient w-full py-5 rounded-2xl text-xl font-bold shadow-[0_10px_20px_rgba(236,0,140,0.3)] mt-2">
+                내 업무 문제 해결하기 →
+            </button>
+
+            <!-- 2열 배치 수치 데이터 -->
+            <div class="grid grid-cols-2 gap-4 mt-10 text-center text-sm text-gray-400 max-w-xs mx-auto">
+                <div class="glass-card p-4">
+                    <div class="text-cyan-400 font-bold text-2xl mb-1">10+</div>
+                    AX 솔루션 전시
+                </div>
+                <div class="glass-card p-4">
+                    <div class="text-cyan-400 font-bold text-2xl mb-1">10초</div>
+                    진단 소요 시간
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2: 페인포인트 선택 -->
+        <div id="step2" class="step-content py-4">
+            <button onclick="goToStep(1)" class="text-gray-400 text-sm mb-6 w-fit hover:text-white transition-colors">← 처음으로</button>
+            <h2 class="text-2xl font-bold mb-3">업무에서 어떤 어려움이<br>있으신가요?</h2>
+            <p class="text-gray-400 mb-8 text-sm">아래 태그를 눌러 겪고 계신 문제를 선택해보세요.</p>
+
+            <div class="text-sm font-medium text-pink-400 mb-3 flex items-center gap-2">
+                <span>📌</span> 우리 팀이 자주 겪는 문제
+            </div>
+            <div class="grid grid-cols-1 gap-3" id="painpoint-list">
+                <!-- JS로 페인포인트가 주입됩니다 -->
+            </div>
+        </div>
+
+        <!-- STEP 3: 솔루션 결과 -->
+        <div id="step3" class="step-content py-4">
+            <div class="text-center mb-8">
+                <p class="text-cyan-400 font-bold mb-2 text-sm bg-cyan-900/40 inline-block px-4 py-1 rounded-full border border-cyan-700">✦ AI 추천 완료</p>
+                <h2 class="text-3xl font-bold mt-4">딱 맞는 솔루션을<br>찾았어요!</h2>
+            </div>
+
+            <div id="solution-detail" class="glass-card p-7 border-t-4 border-t-cyan-400 mb-6">
+                <!-- JS로 솔루션 내용이 주입됩니다 -->
+            </div>
+
+            <!-- 마우스 오버 효과 및 2단계 복귀 설정 -->
+            <button onclick="goToStep(2)" class="w-full py-4 rounded-xl border border-gray-600 bg-transparent text-gray-300 font-medium hover:bg-gray-800 hover:text-white hover:border-gray-400 transition-all duration-300">
+                다른 고민 해결하기
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // 데이터
+        const data =[
+            { id: 1, emoji: "🔒", pain: "데이터 외부 유출 우려", title: "[Cloud] Azure with SPC", keywords:["하이퍼스케일 클라우드", "데이터 주권", "강력한 암호화"], desc: "데이터 주권 보호에 특화된 글로벌 수준의 한국적 클라우드 서비스입니다.", detail: "보안·안정성 등에서 검증된 글로벌 하이퍼스케일 컴퓨팅 기반 국내 기업 데이터 보안 특화 클라우드 서비스" },
+            { id: 2, emoji: "📊", pain: "데이터 분석의 제한", title: "[플랫폼] Databricks on Azure", keywords:["성능개선", "Azure Databricks", "AI 네이티브"], desc: "데이터와 AI 워크로드를 통합하여 생산성을 극대화하는 클라우드 빅데이터 플랫폼이에요.", detail: "Azure Databricks 기반의 통합 데이터 플랫폼 – 데이터•AI 워크로드를 통합해 생산성 극대화" },
+            { id: 3, emoji: "💸", pain: "AI 인프라 비용", title: "[GPU] GPUaaS (GPU as a Service) on Azure", keywords:["비용 절감", "GPU 공유", "온디맨드"], desc: "고성능 GPU를 필요한 만큼만 사용해 AI 인프라 비용을 획기적으로 절감할 수 있어요.", detail: "AI 학습 및 추론을 위한 고성능 GPU 인프라를 국내 리전 데이터센터 기반으로 제공하는 GPU 플랫폼" },
+            { id: 4, emoji: "🗂️", pain: "연구 데이터 분산", title: "[Data] 데이터 하이웨이 - AI Data Hub & Agent", keywords:["데이터 통합", "연구 자동화", "지식 자산화"], desc: "흩어진 연구 데이터를 하나로 통합해 연구 업무 자동화와 인사이트 발굴을 지원합니다.", detail: "MS Azure 기반 시스템 구성을 통해, 데이터 자산화와 연구 환경의 질적 혁신 추진" },
+            { id: 5, emoji: "💼", pain: "보험 업무 지원", title: "[금융] AI 보험 세일즈 어시스턴트", keywords:["약관 분석", "상담 자동화", "설계사 지원"], desc: "복잡한 보험 약관을 AI가 즉시 분석해 설계사 상담 지원과 상품 추천을 자동화합니다.", detail: "단순 검색을 넘어 스스로 사고하고 전문가의 지식에서 답을 찾아 최적의 보험 영업 화법 도출" },
+            { id: 6, emoji: "🔍", pain: "제조 문서 검색", title: "[제조] 설비 LLM Agent", keywords:["이미지 RAG", "설비 문서", "제조 특화"], desc: "도면·차트·이미지까지 이해하는 멀티모달 RAG로 제조 설비 문서 검색 정확도를 높여드립니다.", detail: "철강 제조업 특화 AI Agent로 Azure OpenAI Supervised Finetuning 적용사례" },
+            { id: 7, emoji: "🌐", pain: "다국어 소통 문제", title: "[제조] Teams 번역봇", keywords:["실시간 번역", "다국어 협업", "LLM 번역"], desc: "글로벌 회의에서 다양한 언어를 실시간으로 번역해 언어 장벽 없이 협업을 지원하는 번역 서비스 입니다.", detail: "현대자동차 그룹의 글로벌 협업을 위한, 동시 다중 번역 기반 엔터프라이즈급 실시간 번역 플랫폼" },
+            { id: 8, emoji: "🔄", pain: "반복 영업 업무", title: "[유통] 견적/영업지원 Agent", keywords:["업무 자동화", "시간 절약", "영업 효율 ↑"], desc: "자연어 대화만으로 DB 조회부터 영업 보고서 작성, 메일 대응까지 반복 업무를 자동화해드립니다.", detail: "B2B MRO 영업 담당자를 위한 LangGraph 기반 멀티스테이지 AI Agent (영업 업무 전반을 자동화)" },
+            { id: 9, emoji: "💻", pain: "개발 자산 통합", title: "[Dev] AxDD - Agentic AIDD on Azure", keywords:["자산 통합", "생산성 향상", "코드 재활용"], desc: "파편화된 개발 자산을 하나로 모아 재활용률과 개발 생산성을 극대화합니다.", detail: "AI 기반 자동화로 AX 프로젝트의 요구사항·자산·실행을 하나의 체계로 통합하는 Portal(관리) + CLI(실행)" },
+            { id: 10, emoji: "💡", pain: "신규 사업 모델 기획", title: "[KT Innovation Hub Engagement Process]", keywords:["기술 협력", "비즈니스 매칭", "인큐베이팅"], desc: "기술 및 내용 미수령", detail: "기술 및 내용 미수령" }
+        ];
+
+        // 페이지 전환 함수
+        function goToStep(step) {
+            document.querySelectorAll('.step-content').forEach(s => {
+                s.classList.remove('active');
+            });
+            document.getElementById('step' + step).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // 3단계 결과 출력 함수
+        function showSolution(id) {
+            const item = data.find(d => d.id === id);
+            const detailHtml = `
+                <div class="mb-4">
+                    <h3 class="text-xl font-bold text-white mb-4 leading-snug break-keep">${item.title}</h3>
+                    
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        ${item.keywords.map(k => `<span class="keyword-badge">${k}</span>`).join('')}
+                    </div>
+
+                    <div class="bg-white/5 rounded-xl p-5 mb-6 border border-white/10 shadow-inner">
+                        <p class="text-[1.05rem] text-cyan-200 font-medium leading-relaxed mb-4 break-keep">"${item.desc}"</p>
+                        <p class="text-sm text-gray-300 leading-relaxed break-keep">· ${item.detail}</p>
+                    </div>
+
+                    <!-- 전시 부스 안내 UI -->
+                    <div class="bg-[#10121a] border border-gray-700 rounded-2xl p-4 flex items-center gap-4 hover:border-indigo-500/50 transition-colors">
+                        <div class="w-[3.5rem] h-[3.5rem] rounded-[0.8rem] border border-indigo-500/60 flex flex-col items-center justify-center bg-indigo-900/20 flex-shrink-0">
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300 font-bold text-sm tracking-wide">안내</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-white font-bold text-sm mb-1.5">부스 위치 추후 업데이트</h4>
+                            <p class="text-gray-400 text-xs leading-relaxed break-keep">전시 부스로 이동하여 더욱 자세한 설명을 들으실 수 있습니다.<br>(현재 부스 위치는 미확정입니다.)</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('solution-detail').innerHTML = detailHtml;
+            goToStep(3); // 3단계로 이동
+        }
+
+        // 초기 페인포인트 리스트 생성
+        const listContainer = document.getElementById('painpoint-list');
+        data.forEach(item => {
+            const btn = document.createElement('div');
+            btn.className = 'glass-card px-5 py-4 cursor-pointer flex justify-between items-center group';
+            btn.onclick = () => showSolution(item.id);
+            // 이모지와 텍스트를 flex로 묶어 깔끔하게 정렬
+            btn.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <span class="text-lg opacity-90 group-hover:scale-110 transition-transform">${item.emoji}</span>
+                    <span class="text-base font-medium text-gray-200 group-hover:text-cyan-300 transition-colors">${item.pain}</span>
+                </div>
+                <span class="text-gray-500 group-hover:translate-x-1 group-hover:text-cyan-400 transition-all">→</span>
+            `;
+            listContainer.appendChild(btn);
+        });
+    </script>
+</body>
+</html>
