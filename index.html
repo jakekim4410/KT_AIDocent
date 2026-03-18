@@ -3,12 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Microsoft AI Tour : KT part</title>
+    <title>KT AI 도슨트 서비스</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
     <style>
+        /* KT 전용 브랜드 서체 (Y유니버스체) 웹폰트 적용 */
+        @font-face {
+            font-family: 'YUniverse';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_yuniverse@1.0/YUniverse-L.woff2') format('woff2');
+            font-weight: 300;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'YUniverse';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_yuniverse@1.0/YUniverse-L.woff2') format('woff2');
+            font-weight: 400; 
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'YUniverse';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_yuniverse@1.0/YUniverse-B.woff2') format('woff2');
+            font-weight: 500; 
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'YUniverse';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_yuniverse@1.0/YUniverse-B.woff2') format('woff2');
+            font-weight: 700; 
+            font-style: normal;
+        }
+
         body {
-            font-family: 'Pretendard', sans-serif;
+            font-family: 'YUniverse', sans-serif;
             background: radial-gradient(circle at top right, #004e92, #000428);
             color: white;
             margin: 0;
@@ -85,39 +110,52 @@
         <!-- STEP 1: 대기 화면 -->
         <div id="step1" class="step-content active justify-center">
             
-            <!-- 상단 파트너십 로고 -->
-            <div class="flex justify-center w-full mb-8 pt-2">
-                <img src="https://enterprise.kt.com/entpf/images/product/webResource/msLogo.png" 
-                     alt="KT x Microsoft" 
-                     class="h-8 md:h-9 object-contain">
-            </div>
-
-
-            <!-- 신규 추가된 히어로 이미지 -->
-            <div class="relative w-full mb-8">
-                <!-- 이미지 뒤 네온 글로우 효과 -->
+            <!-- 히어로 이미지 & 로고 컨테이너 -->
+            <div class="relative w-full mb-8 mt-2">
                 <div class="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-500 blur-xl opacity-30 rounded-2xl"></div>
-                <!-- 실제 이미지 -->
-                <img src="https://news.microsoft.com/source/asia/wp-content/uploads/2026/03/SaveTheDate_MS-AI-Tour_FY26_Generic-e1772672566710-1585x1268.png" 
-                     alt="Microsoft AI Tour Key Visual" 
-                     class="relative w-full h-auto rounded-2xl shadow-2xl border border-white/10 object-cover">
+                
+                <div class="relative rounded-2xl shadow-2xl border border-white/10 overflow-hidden">
+                    
+                    <!-- 상단 로고 컨테이너 -->
+                    <div class="absolute top-4 left-4 md:top-5 md:left-5 z-10">
+                        <!-- 배경을 하얀색 반투명(bg-white/95)으로 변경하여 검은색 글자가 잘 보이게 처리 -->
+                        <div class="bg-white/95 backdrop-blur-xl px-5 py-2.5 rounded-full border border-gray-200/50 flex items-center justify-center gap-3 shadow-[0_4px_12px_rgba(0,0,0,0.3)]">
+                            
+                            <!-- 공식 KT 로고 이미지 -->
+                            <img src="https://wsgadd.kt.com/smart/images/app/logo.png" 
+                                 alt="KT" 
+                                 class="h-4 md:h-5 object-contain">
+
+                            <!-- 로고 사이의 구분선 (회색으로 변경) -->
+                            <span class="text-gray-300 text-[11px] md:text-xs pb-[1px]">|</span>
+
+                            <!-- PART 텍스트 (어두운 색으로 변경) -->
+                            <span class="text-gray-800 font-bold text-xs md:text-sm tracking-widest pt-[1px]">PART</span>
+                        </div>
+                    </div>
+
+                    <!-- 배경 이미지 -->
+                    <img src="https://news.microsoft.com/source/asia/wp-content/uploads/2026/03/SaveTheDate_MS-AI-Tour_FY26_Generic-e1772672566710-1585x1268.png" 
+                         alt="AI Tour Key Visual" 
+                         class="w-full h-auto object-cover">
+                </div>
             </div>
 
             <!-- 도슨트 안내 문구 -->
             <div class="pb-6 text-center">
                 <p class="text-cyan-400 font-medium mb-3 text-lg">✦ KT AI 도슨트 서비스</p>
-                <h2 class="text-3xl font-bold leading-snug">지금 내 업무,<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">어디서 막히고 있나요?</span></h2>
+                <h2 class="text-[1.65rem] font-bold leading-snug break-keep">일은 늘 바쁜데,<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">손이 많이 가는 부분은 어디인가요?</span></h2>
                 <p class="text-gray-400 mt-4 text-sm break-keep">AI가 딱 맞는 KT의 AX 솔루션 부스로 안내해드립니다.</p>
             </div>
 
-            <button onclick="goToStep(2)" class="btn-gradient w-full py-5 rounded-2xl text-xl font-bold shadow-[0_10px_20px_rgba(236,0,140,0.3)] mt-2">
+            <button onclick="goToStep(2)" class="btn-gradient w-full py-5 rounded-2xl text-xl font-bold shadow-[0_10px_20px_rgba(236,0,140,0.3)] mt-2 tracking-wide">
                 내 업무 문제 해결하기 →
             </button>
 
             <!-- 2열 배치 수치 데이터 -->
             <div class="grid grid-cols-2 gap-4 mt-10 text-center text-sm text-gray-400 max-w-xs mx-auto">
                 <div class="glass-card p-4">
-                    <div class="text-cyan-400 font-bold text-2xl mb-1">10+</div>
+                    <div class="text-cyan-400 font-bold text-2xl mb-1">9</div>
                     AX 솔루션 전시
                 </div>
                 <div class="glass-card p-4">
@@ -130,8 +168,8 @@
         <!-- STEP 2: 페인포인트 선택 -->
         <div id="step2" class="step-content py-4">
             <button onclick="goToStep(1)" class="text-gray-400 text-sm mb-6 w-fit hover:text-white transition-colors">← 처음으로</button>
-            <h2 class="text-2xl font-bold mb-3">업무에서 어떤 어려움이<br>있으신가요?</h2>
-            <p class="text-gray-400 mb-8 text-sm">아래 태그를 눌러 겪고 계신 문제를 선택해보세요.</p>
+            <h2 class="text-2xl font-bold mb-3 break-keep">업무에서 어떤 어려움이<br>있으신가요?</h2>
+            <p class="text-gray-400 mb-8 text-sm break-keep">아래 태그를 눌러 겪고 계신 문제를 선택해보세요.</p>
 
             <div class="text-sm font-medium text-pink-400 mb-3 flex items-center gap-2">
                 <span>📌</span> 우리 팀이 자주 겪는 문제
@@ -145,15 +183,14 @@
         <div id="step3" class="step-content py-4">
             <div class="text-center mb-8">
                 <p class="text-cyan-400 font-bold mb-2 text-sm bg-cyan-900/40 inline-block px-4 py-1 rounded-full border border-cyan-700">✦ AI 추천 완료</p>
-                <h2 class="text-3xl font-bold mt-4">딱 맞는 솔루션을<br>찾았어요!</h2>
+                <h2 class="text-3xl font-bold mt-4 break-keep">딱 맞는 솔루션을<br>찾았어요!</h2>
             </div>
 
             <div id="solution-detail" class="glass-card p-7 border-t-4 border-t-cyan-400 mb-6">
                 <!-- JS로 솔루션 내용이 주입됩니다 -->
             </div>
 
-            <!-- 마우스 오버 효과 및 2단계 복귀 설정 -->
-            <button onclick="goToStep(2)" class="w-full py-4 rounded-xl border border-gray-600 bg-transparent text-gray-300 font-medium hover:bg-gray-800 hover:text-white hover:border-gray-400 transition-all duration-300">
+            <button onclick="goToStep(2)" class="w-full py-4 rounded-xl border border-gray-600 bg-transparent text-gray-300 font-medium hover:bg-gray-800 hover:text-white hover:border-gray-400 transition-all duration-300 tracking-wide">
                 다른 고민 해결하기
             </button>
         </div>
@@ -161,21 +198,90 @@
     </div>
 
     <script>
-        // 데이터
         const data =[
-            { id: 1, emoji: "🔒", pain: "데이터 외부 유출 우려", title: "[Cloud] Azure with SPC", keywords:["하이퍼스케일 클라우드", "데이터 주권", "강력한 암호화"], desc: "데이터 주권 보호에 특화된 글로벌 수준의 한국적 클라우드 서비스입니다.", detail: "보안·안정성 등에서 검증된 글로벌 하이퍼스케일 컴퓨팅 기반 국내 기업 데이터 보안 특화 클라우드 서비스" },
-            { id: 2, emoji: "📊", pain: "데이터 분석의 제한", title: "[플랫폼] Databricks on Azure", keywords:["성능개선", "Azure Databricks", "AI 네이티브"], desc: "데이터와 AI 워크로드를 통합하여 생산성을 극대화하는 클라우드 빅데이터 플랫폼이에요.", detail: "Azure Databricks 기반의 통합 데이터 플랫폼 – 데이터•AI 워크로드를 통합해 생산성 극대화" },
-            { id: 3, emoji: "💸", pain: "AI 인프라 비용", title: "[GPU] GPUaaS (GPU as a Service) on Azure", keywords:["비용 절감", "GPU 공유", "온디맨드"], desc: "고성능 GPU를 필요한 만큼만 사용해 AI 인프라 비용을 획기적으로 절감할 수 있어요.", detail: "AI 학습 및 추론을 위한 고성능 GPU 인프라를 국내 리전 데이터센터 기반으로 제공하는 GPU 플랫폼" },
-            { id: 4, emoji: "🗂️", pain: "연구 데이터 분산", title: "[Data] 데이터 하이웨이 - AI Data Hub & Agent", keywords:["데이터 통합", "연구 자동화", "지식 자산화"], desc: "흩어진 연구 데이터를 하나로 통합해 연구 업무 자동화와 인사이트 발굴을 지원합니다.", detail: "MS Azure 기반 시스템 구성을 통해, 데이터 자산화와 연구 환경의 질적 혁신 추진" },
-            { id: 5, emoji: "💼", pain: "보험 업무 지원", title: "[금융] AI 보험 세일즈 어시스턴트", keywords:["약관 분석", "상담 자동화", "설계사 지원"], desc: "복잡한 보험 약관을 AI가 즉시 분석해 설계사 상담 지원과 상품 추천을 자동화합니다.", detail: "단순 검색을 넘어 스스로 사고하고 전문가의 지식에서 답을 찾아 최적의 보험 영업 화법 도출" },
-            { id: 6, emoji: "🔍", pain: "제조 문서 검색", title: "[제조] 설비 LLM Agent", keywords:["이미지 RAG", "설비 문서", "제조 특화"], desc: "도면·차트·이미지까지 이해하는 멀티모달 RAG로 제조 설비 문서 검색 정확도를 높여드립니다.", detail: "철강 제조업 특화 AI Agent로 Azure OpenAI Supervised Finetuning 적용사례" },
-            { id: 7, emoji: "🌐", pain: "다국어 소통 문제", title: "[제조] Teams 번역봇", keywords:["실시간 번역", "다국어 협업", "LLM 번역"], desc: "글로벌 회의에서 다양한 언어를 실시간으로 번역해 언어 장벽 없이 협업을 지원하는 번역 서비스 입니다.", detail: "현대자동차 그룹의 글로벌 협업을 위한, 동시 다중 번역 기반 엔터프라이즈급 실시간 번역 플랫폼" },
-            { id: 8, emoji: "🔄", pain: "반복 영업 업무", title: "[유통] 견적/영업지원 Agent", keywords:["업무 자동화", "시간 절약", "영업 효율 ↑"], desc: "자연어 대화만으로 DB 조회부터 영업 보고서 작성, 메일 대응까지 반복 업무를 자동화해드립니다.", detail: "B2B MRO 영업 담당자를 위한 LangGraph 기반 멀티스테이지 AI Agent (영업 업무 전반을 자동화)" },
-            { id: 9, emoji: "💻", pain: "개발 자산 통합", title: "[Dev] AxDD - Agentic AIDD on Azure", keywords:["자산 통합", "생산성 향상", "코드 재활용"], desc: "파편화된 개발 자산을 하나로 모아 재활용률과 개발 생산성을 극대화합니다.", detail: "AI 기반 자동화로 AX 프로젝트의 요구사항·자산·실행을 하나의 체계로 통합하는 Portal(관리) + CLI(실행)" },
-            { id: 10, emoji: "💡", pain: "신규 사업 모델 기획", title: "[KT Innovation Hub Engagement Process]", keywords:["기술 협력", "비즈니스 매칭", "인큐베이팅"], desc: "기술 및 내용 미수령", detail: "기술 및 내용 미수령" }
+            { 
+                id: 1, 
+                emoji: "🔒", 
+                pain: "클라우드는 쓰고 싶은데, 데이터가 외부로 나갈까 봐 계속 마음이 불안해요.", 
+                title: "Azure with KT SPC", 
+                keywords:["하이퍼스케일 클라우드", "데이터 주권", "강력한 암호화"], 
+                desc: "데이터 주권 보호에 특화된 글로벌 수준의 한국적 클라우드 서비스입니다.", 
+                detail: "보안·안정성 등에서 검증된 글로벌 하이퍼스케일 컴퓨팅 기반 국내 기업 데이터 보안 특화 클라우드 서비스" 
+            },
+            { 
+                id: 2, 
+                emoji: "📊", 
+                pain: "데이터는 계속 늘어나는데, 인프라가 못 따라와서 속도랑 확장성이 발목을 잡아요.", 
+                title: "MAGMA 빅데이터 플랫폼", 
+                keywords:["인프라 확장", "빅데이터", "AI 네이티브"], 
+                desc: "데이터와 AI 워크로드를 통합하여 인프라의 한계를 극복하고 생산성을 극대화하는 플랫폼입니다.", 
+                detail: "통합 데이터 플랫폼 – 데이터•AI 워크로드를 통합해 속도와 확장성 이슈 해결" 
+            },
+            { 
+                id: 3, 
+                emoji: "💼", 
+                pain: "고객 상황에 맞춰 설명하고 보험 설계까지 가야 하는데, 다 수작업이에요.", 
+                title: "AI 보험 세일즈 어시스턴트", 
+                keywords:["약관 분석", "상담 자동화", "설계사 지원"], 
+                desc: "복잡한 보험 약관을 AI가 즉시 분석해 설계사 상담 지원과 상품 추천을 자동화합니다.", 
+                detail: "단순 검색을 넘어 스스로 사고하고 전문가의 지식에서 답을 찾아 최적의 보험 영업 화법 도출" 
+            },
+            { 
+                id: 4, 
+                emoji: "🔍", 
+                pain: "매뉴얼이 있어도, 현장에서는 바로 쓰기 어렵고 외산 설비는 더 힘들어요.", 
+                title: "설비 LLM Agent", 
+                keywords:["이미지 RAG", "설비 문서", "제조 특화"], 
+                desc: "도면·차트·이미지까지 이해하는 멀티모달 RAG로 현장에서 설비 문서 검색 정확도를 높여드립니다.", 
+                detail: "철강 제조업 특화 AI Agent로 Azure OpenAI Supervised Finetuning 적용사례" 
+            },
+            { 
+                id: 5, 
+                emoji: "⚡", 
+                pain: "GPU만 있으면 바로 시작될 줄 알았는데, 세팅/운영에서 계속 막혀요.", 
+                title: "K GPUaaS<br><span class='text-lg'>(K GPU as a Service on Azure)</span>", 
+                keywords:["비용 절감", "운영 효율", "온디맨드"], 
+                desc: "고성능 GPU를 필요한 만큼만 사용하고, 복잡한 세팅 없이 바로 AI 워크로드를 시작할 수 있어요.", 
+                detail: "AI 학습 및 추론을 위한 고성능 GPU 인프라를 국내 리전 데이터센터 기반으로 제공하는 플랫폼" 
+            },
+            { 
+                id: 6, 
+                emoji: "🌐", 
+                pain: "대형 회의나 웨비나 때는 번역 품질이랑 안정성이 항상 불안합니다.", 
+                title: "AI Translator<br><span class='text-lg'>(Teams 실시간 번역 앱)</span>", 
+                keywords:["실시간 번역", "다국어 협업", "안정성 보장"], 
+                desc: "글로벌 회의에서 다양한 언어를 실시간으로 번역해 언어 장벽 없이 대규모 협업을 지원합니다.", 
+                detail: "글로벌 협업을 위한, 동시 다중 번역 기반 엔터프라이즈급 실시간 번역 플랫폼" 
+            },
+            { 
+                id: 7, 
+                emoji: "🔄", 
+                pain: "견적 한 번 내는 데 사람이 너무 많이 개입돼요.", 
+                title: "Azure AI 기반 영업 및 견적 Agent", 
+                keywords:["업무 자동화", "시간 절약", "영업 효율 ↑"], 
+                desc: "자연어 대화만으로 DB 조회부터 견적 작성, 메일 대응까지 반복 업무를 자동화해드립니다.", 
+                detail: "영업 담당자를 위한 LangGraph 기반 멀티스테이지 AI Agent (영업 업무 전반을 자동화)" 
+            },
+            { 
+                id: 8, 
+                emoji: "💻", 
+                pain: "개발 요구사항이 계속 바뀌는데, 정리는 항상 사람 손이에요.", 
+                title: "AxDD<br><span class='text-lg'>(KT AXD + AI Driven Develop)</span>", 
+                keywords:["자산 통합", "생산성 향상", "코드 재활용"], 
+                desc: "파편화된 개발 자산과 변경되는 요구사항을 하나로 모아 개발 생산성을 극대화합니다.", 
+                detail: "AI 기반 자동화로 AX 프로젝트의 요구사항·자산·실행을 하나의 체계로 통합하는 Portal(관리) + CLI(실행)" 
+            },
+            { 
+                id: 9, 
+                emoji: "💡", 
+                pain: "실제 AX를 도입하려고 하지만, 실행 전략을 해결해줄 컨설팅이 필요해요.", 
+                title: "KT Innovation Hub<br>AX Engagement Process", 
+                keywords:["기술 협력", "비즈니스 매칭", "인큐베이팅"], 
+                desc: "고객 맞춤형 AX 도입 전략과 실행 방안을 도출해주는 전문 컨설팅을 제공합니다.", 
+                detail: "성공적인 AX 전환을 위한 KT의 노하우가 담긴 엔터프라이즈 컨설팅 및 인큐베이팅 프로세스" 
+            }
         ];
 
-        // 페이지 전환 함수
         function goToStep(step) {
             document.querySelectorAll('.step-content').forEach(s => {
                 s.classList.remove('active');
@@ -184,7 +290,6 @@
             window.scrollTo(0, 0);
         }
 
-        // 3단계 결과 출력 함수
         function showSolution(id) {
             const item = data.find(d => d.id === id);
             const detailHtml = `
@@ -200,7 +305,6 @@
                         <p class="text-sm text-gray-300 leading-relaxed break-keep">· ${item.detail}</p>
                     </div>
 
-                    <!-- 전시 부스 안내 UI -->
                     <div class="bg-[#10121a] border border-gray-700 rounded-2xl p-4 flex items-center gap-4 hover:border-indigo-500/50 transition-colors">
                         <div class="w-[3.5rem] h-[3.5rem] rounded-[0.8rem] border border-indigo-500/60 flex flex-col items-center justify-center bg-indigo-900/20 flex-shrink-0">
                             <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300 font-bold text-sm tracking-wide">안내</span>
@@ -213,22 +317,20 @@
                 </div>
             `;
             document.getElementById('solution-detail').innerHTML = detailHtml;
-            goToStep(3); // 3단계로 이동
+            goToStep(3);
         }
 
-        // 초기 페인포인트 리스트 생성
         const listContainer = document.getElementById('painpoint-list');
         data.forEach(item => {
             const btn = document.createElement('div');
             btn.className = 'glass-card px-5 py-4 cursor-pointer flex justify-between items-center group';
             btn.onclick = () => showSolution(item.id);
-            // 이모지와 텍스트를 flex로 묶어 깔끔하게 정렬
             btn.innerHTML = `
-                <div class="flex items-center gap-3">
-                    <span class="text-lg opacity-90 group-hover:scale-110 transition-transform">${item.emoji}</span>
-                    <span class="text-base font-medium text-gray-200 group-hover:text-cyan-300 transition-colors">${item.pain}</span>
+                <div class="flex items-start gap-3 flex-1 pr-2">
+                    <span class="text-[1.3rem] opacity-90 group-hover:scale-110 transition-transform mt-[2px]">${item.emoji}</span>
+                    <span class="text-[0.95rem] leading-snug font-medium text-gray-200 group-hover:text-cyan-300 transition-colors text-left break-keep">${item.pain}</span>
                 </div>
-                <span class="text-gray-500 group-hover:translate-x-1 group-hover:text-cyan-400 transition-all">→</span>
+                <span class="text-gray-500 group-hover:translate-x-1 group-hover:text-cyan-400 transition-all text-xl">→</span>
             `;
             listContainer.appendChild(btn);
         });
