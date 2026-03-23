@@ -2,330 +2,293 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KT AI 도슨트 서비스</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI 도슨트 서비스</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <style>
-        /* KT 전용 브랜드 서체 (Y유니버스체) 웹폰트 적용 */
-        @font-face {
-            font-family: 'YUniverse';
-            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_yuniverse@1.0/YUniverse-L.woff2') format('woff2');
-            font-weight: 300;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'YUniverse';
-            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_yuniverse@1.0/YUniverse-L.woff2') format('woff2');
-            font-weight: 400; 
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'YUniverse';
-            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_yuniverse@1.0/YUniverse-B.woff2') format('woff2');
-            font-weight: 500; 
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'YUniverse';
-            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_yuniverse@1.0/YUniverse-B.woff2') format('woff2');
-            font-weight: 700; 
-            font-style: normal;
-        }
-
         body {
-            font-family: 'YUniverse', sans-serif;
-            background: radial-gradient(circle at top right, #004e92, #000428);
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background: #001a35;
             color: white;
             margin: 0;
             overflow-x: hidden;
+            overflow-y: auto;
             min-height: 100vh;
+            word-break: keep-all;
         }
 
-        /* 키 비주얼 배경 효과 */
-        .bg-curves {
+        .bg-pattern {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
-            opacity: 0.6;
-            background: linear-gradient(135deg, rgba(0, 242, 254, 0.1) 0%, transparent 50%),
-                        linear-gradient(225deg, rgba(72, 198, 239, 0.1) 0%, transparent 50%);
+            background: 
+                radial-gradient(circle at 80% 10%, rgba(0, 110, 255, 0.3) 0%, transparent 45%),
+                radial-gradient(circle at 15% 85%, rgba(0, 242, 254, 0.2) 0%, transparent 45%),
+                linear-gradient(160deg, #001224 0%, #002b52 100%);
+        }
+        .bg-pattern::after {
+            content: "";
+            position: absolute; inset: 0;
+            background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+            background-size: 32px 32px;
+            mask-image: radial-gradient(ellipse at center, black, transparent 90%);
+        }
+
+        .step-content { display: none; width: 100%; min-height: 100vh; }
+        .step-content.active { display: block; animation: fadeIn 0.4s ease-out; }
+
+        #step1.active, #step-loading.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @keyframes pulse-ai {
+            0%, 100% { transform: scale(1); opacity: 0.7; filter: drop-shadow(0 0 5px #00f2fe); }
+            50% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 20px #00f2fe); }
+        }
+        @keyframes scan-move {
+            0% { top: -10%; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 110%; opacity: 0; }
+        }
+        @keyframes wave-ripple {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        .ai-core {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+        .ai-text {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            color: white;
+            animation: pulse-ai 2s ease-in-out infinite;
+            z-index: 10;
+        }
+        .ai-wave {
+            position: absolute;
+            inset: 0;
+            border: 2px solid rgba(0, 242, 254, 0.3);
+            border-radius: 50%;
+            animation: wave-ripple 2s linear infinite;
+        }
+        .scan-line {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00f2fe, transparent);
+            box-shadow: 0 0 10px #00f2fe;
+            animation: scan-move 2.5s ease-in-out infinite;
         }
 
         .glass-card {
             background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
         }
 
-        .glass-card:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-3px);
-            border-color: #00f2fe;
-        }
-
-        .btn-gradient {
+        .btn-primary {
             background: linear-gradient(90deg, #ec008c 0%, #fc6767 100%);
-            transition: all 0.3s;
+            color: white; transition: all 0.3s;
         }
 
-        .btn-gradient:hover {
-            opacity: 0.9;
-            transform: scale(1.02);
-        }
+        .highlight { color: #22d3ee; font-weight: 700; }
 
-        /* 화면 전환을 위한 클래스 */
-        .step-content { 
-            display: none; 
-            min-height: 100vh;
+        @keyframes booth-glow {
+            0%, 100% { box-shadow: 0 0 15px var(--booth-color); filter: brightness(1); }
+            50% { box-shadow: 0 0 35px var(--booth-color), 0 0 50px var(--booth-color); filter: brightness(1.2); transform: scale(1.03); }
         }
-        .step-content.active { 
-            display: flex; 
-            flex-direction: column;
-            animation: fadeIn 0.4s ease-out forwards; 
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateX(20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .keyword-badge {
-            background: rgba(0, 242, 254, 0.15);
-            color: #00f2fe;
-            padding: 6px 14px;
-            border-radius: 100px;
-            font-size: 0.85rem;
-            border: 1px solid rgba(0, 242, 254, 0.3);
-            white-space: nowrap;
-        }
+        .animate-booth { background-color: var(--booth-color); animation: booth-glow 1.5s ease-in-out infinite; }
     </style>
 </head>
 <body>
-    <div class="bg-curves"></div>
+    <div class="bg-pattern"></div>
 
-    <div class="max-w-md mx-auto w-full px-6 py-8">
+    <div class="max-w-md mx-auto w-full px-5 py-8">
         
-        <!-- STEP 1: 대기 화면 -->
-        <div id="step1" class="step-content active justify-center">
-            
-            <!-- 히어로 이미지 & 로고 컨테이너 -->
-            <div class="relative w-full mb-8 mt-2">
-                <div class="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-500 blur-xl opacity-30 rounded-2xl"></div>
-                
-                <div class="relative rounded-2xl shadow-2xl border border-white/10 overflow-hidden">
-                    
-                    <!-- 상단 로고 컨테이너 -->
-                    <div class="absolute top-4 left-4 md:top-5 md:left-5 z-10">
-                        <div class="bg-white/95 backdrop-blur-xl px-5 py-2.5 rounded-full border border-gray-200/50 flex items-center justify-center gap-3 shadow-[0_4px_12px_rgba(0,0,0,0.3)]">
-                            <img src="https://wsgadd.kt.com/smart/images/app/logo.png" 
-                                 alt="KT" 
-                                 class="h-4 md:h-5 object-contain">
-                            <span class="text-gray-300 text-[11px] md:text-xs pb-[1px]">|</span>
-                            <span class="text-gray-800 font-bold text-xs md:text-sm tracking-widest pt-[1px]">PART</span>
-                        </div>
-                    </div>
-
-                    <!-- 배경 이미지 -->
-                    <img src="https://news.microsoft.com/source/asia/wp-content/uploads/2026/03/SaveTheDate_MS-AI-Tour_FY26_Generic-e1772672566710-1585x1268.png" 
-                         alt="AI Tour Key Visual" 
-                         class="w-full h-auto object-cover">
+        <!-- STEP 1: 메인 -->
+        <div id="step1" class="step-content active">
+            <div class="relative w-full mb-8">
+                <div class="absolute inset-0 bg-cyan-500 blur-[70px] opacity-20 rounded-full"></div>
+                <div class="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+                    <img src="https://drive.google.com/thumbnail?id=12Ryp494KWwO71h-quh-Kmi7l27rlPX5b&sz=w1000" class="w-full h-auto block">
                 </div>
             </div>
-
-            <!-- 도슨트 안내 문구 -->
-            <div class="pb-6 text-center">
-                <p class="text-cyan-400 font-medium mb-3 text-lg">✦ KT AI 도슨트 서비스</p>
-                <h2 class="text-[1.65rem] font-bold leading-snug break-keep">일은 늘 바쁜데,<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">손이 많이 가는 부분은 어디인가요?</span></h2>
-                <p class="text-gray-400 mt-4 text-sm break-keep">AI가 딱 맞는 KT의 AX 솔루션 부스로 안내해드립니다.</p>
+            <div class="pb-8 text-center">
+                <p class="text-cyan-400 font-bold mb-4 text-xs uppercase tracking-[0.25em]">✦ KT AI 도슨트 서비스</p>
+                <h2 class="text-2xl font-black leading-tight tracking-tight">일은 늘 바쁜데,<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">손이 많이 가는 부분은 어디인가요?</span></h2>
+                <p class="text-gray-400 mt-4 text-sm px-4">AI가 딱 맞는 KT의 AX 솔루션 부스로 안내해드립니다.</p>
             </div>
+            <button onclick="goToStep(2)" class="btn-primary w-full py-5 rounded-2xl text-lg font-bold shadow-xl">내 업무 문제 해결하기 →</button>
 
-            <button onclick="goToStep(2)" class="btn-gradient w-full py-5 rounded-2xl text-xl font-bold shadow-[0_10px_20px_rgba(236,0,140,0.3)] mt-2 tracking-wide">
-                내 업무 문제 해결하기 →
-            </button>
-
-            <!-- 2열 배치 수치 데이터 -->
-            <div class="grid grid-cols-2 gap-4 mt-10 text-center text-sm text-gray-400 max-w-xs mx-auto">
-                <div class="glass-card p-4">
+            <!-- 수치 데이터 박스 추가 -->
+            <div class="grid grid-cols-2 gap-4 mt-12 text-center text-xs text-gray-400 max-w-xs mx-auto">
+                <div class="glass-card p-5">
                     <div class="text-cyan-400 font-bold text-2xl mb-1">9</div>
                     AX 솔루션 전시
                 </div>
-                <div class="glass-card p-4">
+                <div class="glass-card p-5">
                     <div class="text-cyan-400 font-bold text-2xl mb-1">10초</div>
                     진단 소요 시간
                 </div>
             </div>
         </div>
 
-        <!-- STEP 2: 페인포인트 선택 -->
-        <div id="step2" class="step-content py-4">
-            <button onclick="goToStep(1)" class="text-gray-400 text-sm mb-6 w-fit hover:text-white transition-colors">← 처음으로</button>
-            <h2 class="text-2xl font-bold mb-3 break-keep">업무에서 어떤 어려움이<br>있으신가요?</h2>
-            <p class="text-gray-400 mb-8 text-sm break-keep">아래 태그를 눌러 겪고 계신 문제를 선택해보세요.</p>
+        <!-- STEP 2: 리스트 -->
+        <div id="step2" class="step-content">
+            <button onclick="goToStep(1)" class="text-gray-400 text-sm mb-6 flex items-center gap-1 hover:text-white">← 처음으로</button>
+            <h2 class="text-xl font-bold mb-8 leading-snug">업무에서 느끼는<br><span class="text-cyan-400">가장 큰 어려움</span>을 선택해주세요.</h2>
+            <div class="flex flex-col gap-4 pb-20" id="painpoint-list"></div>
+        </div>
 
-            <!-- 1. 글씨 포인트 2-3포인트 키우기 (text-[17px] 적용) -->
-            <div class="text-[17px] font-medium text-pink-400 mb-3 flex items-center gap-2">
-                <span>📌</span> 우리 팀이 자주 겪는 문제
+        <!-- STEP LOADING -->
+        <div id="step-loading" class="step-content items-center">
+            <div class="ai-core mb-10">
+                <div class="ai-wave"></div>
+                <div class="ai-wave" style="animation-delay: 1s;"></div>
+                <div class="scan-line"></div>
+                <span class="ai-text">AI</span>
             </div>
-            <div class="grid grid-cols-1 gap-3" id="painpoint-list">
-                <!-- JS로 페인포인트가 주입됩니다 -->
+            <div class="text-center mb-12">
+                <h2 class="text-xl font-bold mb-2 tracking-tighter">분석 중입니다...</h2>
+                <p class="text-gray-400 text-sm">최적의 솔루션을 스캔하고 있습니다.</p>
+            </div>
+            <div class="w-full max-w-[240px] space-y-4">
+                <div class="flex items-center gap-3 opacity-0 transition-all duration-500" id="load-1"><div class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f2fe]"></div><span class="text-sm font-medium text-gray-300">데이터 스캔 완료</span></div>
+                <div class="flex items-center gap-3 opacity-0 transition-all duration-500" id="load-2"><div class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f2fe]"></div><span class="text-sm font-medium text-gray-300">솔루션 패턴 매칭</span></div>
+                <div class="flex items-center gap-3 opacity-0 transition-all duration-500" id="load-3"><div class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#00f2fe]"></div><span class="text-sm font-medium text-gray-300">최적 경로 탐색 완료</span></div>
             </div>
         </div>
 
-        <!-- STEP 3: 솔루션 결과 -->
-        <div id="step3" class="step-content py-4">
+        <!-- STEP 3: 상세 결과 -->
+        <div id="step3" class="step-content pb-20">
             <div class="text-center mb-8">
-                <p class="text-cyan-400 font-bold mb-2 text-sm bg-cyan-900/40 inline-block px-4 py-1 rounded-full border border-cyan-700">✦ AI 추천 완료</p>
-                <h2 class="text-3xl font-bold mt-4 break-keep">딱 맞는 솔루션을<br>찾았어요!</h2>
+                <h2 class="text-2xl font-black mt-2 tracking-tight">최적의 솔루션을 찾았습니다!</h2>
             </div>
-
-            <div id="solution-detail" class="glass-card p-7 border-t-4 border-t-cyan-400 mb-6">
-                <!-- JS로 솔루션 내용이 주입됩니다 -->
+            <div id="solution-detail" class="glass-card p-6 mb-8 relative overflow-hidden">
+                <div id="top-accent-bar" class="absolute top-0 left-0 w-full h-1.5"></div>
             </div>
-
-            <button onclick="goToStep(2)" class="w-full py-4 rounded-xl border border-gray-600 bg-transparent text-gray-300 font-medium hover:bg-gray-800 hover:text-white hover:border-gray-400 transition-all duration-300 tracking-wide">
-                다른 고민 해결하기
-            </button>
+            <div class="mb-10">
+                <h4 class="text-white font-bold mb-4 flex items-center gap-2 text-base px-1">✦ 함께 보면 좋은 솔루션</h4>
+                <div id="rec-area"></div>
+            </div>
+            <button onclick="goToStep(2)" class="w-full py-4 rounded-xl border border-white/10 bg-white/5 text-gray-400 font-semibold transition-all">다른 고민 해결하기</button>
         </div>
-
     </div>
 
     <script>
-        /* 2, 3. 줄바꿈 및 형광하늘색 텍스트 하이라이트 적용 */
-        const data =[
-            { 
-                id: 1, 
-                emoji: "🔒", 
-                pain: "클라우드는 쓰고 싶은데,<br><span class='text-[#00f2fe] font-bold'>데이터가 외부로 나갈까</span> 봐 계속 마음이 불안해요.", 
-                title: "Azure with KT SPC", 
-                keywords:["하이퍼스케일 클라우드", "데이터 주권", "강력한 암호화"], 
-                desc: "데이터 주권 보호에 특화된 글로벌 수준의 한국적 클라우드 서비스입니다.", 
-                detail: "보안·안정성 등에서 검증된 글로벌 하이퍼스케일 컴퓨팅 기반 국내 기업 데이터 보안 특화 클라우드 서비스" 
-            },
-            { 
-                id: 2, 
-                emoji: "📊", 
-                pain: "데이터는 계속 늘어나는데,<span class='text-[#00f2fe] font-bold'>인프라가<br> 못 따라와서 속도랑 확장성이 발목을</span> 잡아요.", 
-                title: "MAGMA 빅데이터 플랫폼", 
-                keywords:["인프라 확장", "빅데이터", "AI 네이티브"], 
-                desc: "데이터와 AI 워크로드를 통합하여 인프라의 한계를 극복하고 생산성을 극대화하는 플랫폼입니다.", 
-                detail: "통합 데이터 플랫폼 – 데이터•AI 워크로드를 통합해 속도와 확장성 이슈 해결" 
-            },
-            { 
-                id: 3, 
-                emoji: "💼", 
-                pain: "<span class='text-[#00f2fe] font-bold'>고객 상황에 맞춰 설명하고 보험 설계</span>까지 <br>가야하는데, 다 <span class='text-[#00f2fe] font-bold'>수작업</span>이에요.", 
-                title: "AI 보험 세일즈 어시스턴트", 
-                keywords:["약관 분석", "상담 자동화", "설계사 지원"], 
-                desc: "복잡한 보험 약관을 AI가 즉시 분석해 설계사 상담 지원과 상품 추천을 자동화합니다.", 
-                detail: "단순 검색을 넘어 스스로 사고하고 전문가의 지식에서 답을 찾아 최적의 보험 영업 화법 도출" 
-            },
-            { 
-                id: 4, 
-                emoji: "🔍", 
-                pain: "매뉴얼이 있어도, <span class='text-[#00f2fe] font-bold'>현장에서는 바로 쓰기 어렵고</span><br> 외산 설비는 더 힘들어요.", 
-                title: "설비 LLM Agent", 
-                keywords:["이미지 RAG", "설비 문서", "제조 특화"], 
-                desc: "도면·차트·이미지까지 이해하는 멀티모달 RAG로 현장에서 설비 문서 검색 정확도를 높여드립니다.", 
-                detail: "철강 제조업 특화 AI Agent로 Azure OpenAI Supervised Finetuning 적용사례" 
-            },
-            { 
-                id: 5, 
-                emoji: "⚡", 
-                pain: "GPU만 있으면 바로 시작될 줄 알았는데, <span class='text-[#00f2fe] font-bold'><br>세팅/운영에서 계속 막혀요.</span>", 
-                title: "K GPUaaS<br><span class='text-lg'>(K GPU as a Service on Azure)</span>", 
-                keywords:["비용 절감", "운영 효율", "온디맨드"], 
-                desc: "고성능 GPU를 필요한 만큼만 사용하고, 복잡한 세팅 없이 바로 AI 워크로드를 시작할 수 있어요.", 
-                detail: "AI 학습 및 추론을 위한 고성능 GPU 인프라를 국내 리전 데이터센터 기반으로 제공하는 플랫폼" 
-            },
-            { 
-                id: 6, 
-                emoji: "🌐", 
-                pain: "대형 회의나 웨비나 때는 <span class='text-[#00f2fe] font-bold'>번역 품질이랑 안정성이</span><br><span class='text-[#00f2fe] font-bold'>항상 불만</span>입니다.", 
-                title: "AI Translator<br><span class='text-lg'>(Teams 실시간 번역 앱)</span>", 
-                keywords:["실시간 번역", "다국어 협업", "안정성 보장"], 
-                desc: "글로벌 회의에서 다양한 언어를 실시간으로 번역해 언어 장벽 없이 대규모 협업을 지원합니다.", 
-                detail: "글로벌 협업을 위한, 동시 다중 번역 기반 엔터프라이즈급 실시간 번역 플랫폼" 
-            },
-            { 
-                id: 7, 
-                emoji: "🔄", 
-                pain: "<span class='text-[#00f2fe] font-bold'>견적 한 번 내는 데 사람이 너무 많이 개입</span>돼요.", 
-                title: "Azure AI 기반 영업 및 견적 Agent", 
-                keywords:["업무 자동화", "시간 절약", "영업 효율 ↑"], 
-                desc: "자연어 대화만으로 DB 조회부터 견적 작성, 메일 대응까지 반복 업무를 자동화해드립니다.", 
-                detail: "영업 담당자를 위한 LangGraph 기반 멀티스테이지 AI Agent (영업 업무 전반을 자동화)" 
-            },
-            { 
-                id: 8, 
-                emoji: "💻", 
-                pain: "<span class='text-[#00f2fe] font-bold'>개발 요구사항이</span> 계속 바뀌는데,<br>정리는 항상 사람 <span class='text-[#00f2fe] font-bold'>손</span>이에요.", 
-                title: "AxDD<br><span class='text-lg'>(KT AXD + AI Driven Develop)</span>", 
-                keywords:["자산 통합", "생산성 향상", "코드 재활용"], 
-                desc: "파편화된 개발 자산과 변경되는 요구사항을 하나로 모아 개발 생산성을 극대화합니다.", 
-                detail: "AI 기반 자동화로 AX 프로젝트의 요구사항·자산·실행을 하나의 체계로 통합하는 Portal(관리) + CLI(실행)" 
-            },
-            { 
-                id: 9, 
-                emoji: "💡", 
-                pain: "실제 AX를 도입하려고 하지만, <span class='text-[#00f2fe] font-bold'>실행 전략을</span><br><span class='text-[#00f2fe] font-bold'>해결해줄 컨설팅이 필요</span>해요.", 
-                title: "KT Innovation Hub<br>AX Engagement Process", 
-                keywords:["기술 협력", "비즈니스 매칭", "인큐베이팅"], 
-                desc: "고객 맞춤형 AX 도입 전략과 실행 방안을 도출해주는 전문 컨설팅을 제공합니다.", 
-                detail: "성공적인 AX 전환을 위한 KT의 노하우가 담긴 엔터프라이즈 컨설팅 및 인큐베이팅 프로세스" 
-            }
+        const BOOTH_COLORS = { 1: "#f39233", 2: "#d65b93", 3: "#874b91", 4: "#2b9b98", 5: "#82cf55", 6: "#3b3c94", 7: "#2b8ccf" };
+        const BOOTH_MAPS = { 1: "1T87P0bt3XNaghOFpyjhmEPIMwo-xJd9W", 2: "1L9R3ssdKGygEJgGX5i5vCVqIOQip89G3", 3: "1wXqu8BYAt3zW9HNPW9xVD-JjsOd6zIgL", 4: "1zs3jerMHGXpVCd5Rx1Q2lfkpFx2snkWn", 5: "1EPzq1DyssQUk-EPlyIhWrHGU5QU-jUmf", 6: "1A7U6JclCKjJGH8V1dqlHa08ERVzW5C5-", 7: "1lbExUnG7hmUwhNpI7__tOJRB1PgTdHCh" };
+
+        const data = [
+            { id: 1, booth: 1, emoji: "🔒", pain: "클라우드는 쓰고 싶은데, <span class='highlight'>데이터가 외부로 나갈까</span> 봐 계속 마음이 불안해요.", title: "Azure with KT SPC", keywords:["데이터 주권", "강력 보안"], desc: "보안 체계를 더한 안정적인 클라우드입니다.", detail: "국내 기업 데이터 보안에 특화된 하이퍼스케일 인프라를 제공합니다." },
+            { id: 2, booth: 2, emoji: "📊", pain: "데이터는 계속 늘어나는데, <span class='highlight'>인프라가 못 따라와서 속도랑 확장성</span>이 발목을 잡아요.", title: "MAGMA 빅데이터 플랫폼", keywords:["인프라 확장", "빅데이터"], desc: "데이터와 AI 워크로드를 통합하여 시스템 한계를 극복합니다.", detail: "인프라 비용 절감과 데이터 처리 성능 극대화를 지원합니다." },
+            { id: 3, booth: 3, emoji: "💼", pain: "고객 상황에 맞춰 설명하고 보험 설계까지 가야 하는데, <span class='highlight'>다 수작업이에요.</span>", title: "AI 보험 세일즈 어시스턴트", keywords:["상담 자동화", "약관 분석"], desc: "보험 정보를 AI가 분석해 최적의 화법을 제안합니다.", detail: "설계사의 업무 효율을 획기적으로 높여주는 지능형 솔루션입니다." },
+            { id: 4, booth: 4, emoji: "🔍", pain: "매뉴얼이 있어도, <span class='highlight'>현장에서는 바로 쓰기 어렵고</span> 외산 설비는 더 힘들어요.", title: "설비 LLM Agent", keywords:["멀티모달 RAG", "제조 특화"], desc: "도면과 차트까지 이해하는 AI가 현장 질문에 즉각 답을 제시합니다.", detail: "제조 현장에 최적화된 고도의 기술 지식 검색 에이전트입니다." },
+            { id: 5, booth: 4, emoji: "⚡", pain: "GPU만 있으면 바로 시작될 줄 알았는데, <span class='highlight'>세팅/운영에서 계속 막혀요.</span>", title: "K GPUaaS", keywords:["GPU 클라우드", "온디맨드"], desc: "고성능 GPU를 구독 형태로 사용하여 개발 속도를 높입니다.", detail: "낮은 지연 시간과 합리적 비용의 GPU 인프라를 클라우드로 제공합니다." },
+            { id: 6, booth: 5, emoji: "🌐", pain: "대형 회의나 웨비나 때는 <span class='highlight'>번역 품질이랑 안정성이 항상 불만</span>입니다.", title: "AI Translator", keywords:["Teams 연동", "실시간 번역"], desc: "Teams 회의 중 다국어를 실시간 번역하여 장벽을 허물어 줍니다.", detail: "기업용 보안성을 갖춘 안정적인 협업 통역 플랫폼입니다." },
+            { id: 7, booth: 5, emoji: "🔄", pain: "견적 한 번 내는 데 <span class='highlight'>사람이 너무 많이 개입돼요.</span>", title: "영업 및 견적 Agent", keywords:["업무 자동화", "업무 효율"], desc: "대화만으로 DB를 조회하고 견적서 초안까지 AI가 완성합니다.", detail: "지능형 워크플로우를 수행하는 영업 에이전트입니다." },
+            { id: 8, booth: 6, emoji: "💻", pain: "개발 요구사항이 계속 바뀌는데, <span class='highlight'>정리는 항상 사람 손</span>이에요.", title: "AxDD", keywords:["생산성 향상", "자산 통합"], desc: "파편화된 개발 자산을 통합하여 프로젝트 속도를 높여줍니다.", detail: "요구사항 정의부터 전 과정을 관리하는 스마트 포털입니다." },
+            { id: 9, booth: 7, emoji: "💡", pain: "실제 AX를 도입하려고 하지만, <span class='highlight'>실행 전략을 해결해줄 컨설팅</span>이 필요해요.", title: "Innovation Hub 컨설팅", keywords:["전문 컨설팅", "전략 설계"], desc: "맞춤형 AX 도입 로드맵을 설계하여 성공적 전환을 돕습니다.", detail: "KT의 기술력과 노하우가 담긴 전문 AX 엔지니어링 프로세스입니다." }
         ];
 
         function goToStep(step) {
-            document.querySelectorAll('.step-content').forEach(s => {
-                s.classList.remove('active');
-            });
-            document.getElementById('step' + step).classList.add('active');
+            document.querySelectorAll('.step-content').forEach(s => s.classList.remove('active'));
+            const target = step === 'loading' ? 'step-loading' : 'step' + step;
+            const el = document.getElementById(target);
+            if(el) el.classList.add('active');
             window.scrollTo(0, 0);
         }
 
-        function showSolution(id) {
+        async function showSolution(id, isDirect = false) {
             const item = data.find(d => d.id === id);
-            const detailHtml = `
+            if (!isDirect) {
+                goToStep('loading');
+                for(let i=1; i<=3; i++) {
+                    await new Promise(r => setTimeout(r, 700));
+                    const el = document.getElementById(`load-${i}`);
+                    if(el) el.classList.remove('opacity-0');
+                }
+                await new Promise(r => setTimeout(r, 500));
+            }
+
+            const boothColor = BOOTH_COLORS[item.booth];
+            document.documentElement.style.setProperty('--booth-color', boothColor);
+            const mapUrl = `https://drive.google.com/thumbnail?id=${BOOTH_MAPS[item.booth]}&sz=w800`;
+            
+            const detailContainer = document.getElementById('solution-detail');
+            detailContainer.innerHTML = `
+                <div id="top-accent-bar" class="absolute top-0 left-0 w-full h-1.5" style="background-color: ${boothColor}"></div>
                 <div class="mb-4">
-                    <h3 class="text-xl font-bold text-white mb-4 leading-snug break-keep">${item.title}</h3>
-                    
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        ${item.keywords.map(k => `<span class="keyword-badge">${k}</span>`).join('')}
+                    <h3 class="text-xl font-black text-white mb-4 leading-tight">${item.title}</h3>
+                    <div class="flex flex-wrap gap-2 mb-6">${item.keywords.map(k => `<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded-lg text-[10px] font-semibold text-cyan-300">${k}</span>`).join('')}</div>
+                    <div class="bg-white/5 rounded-2xl p-5 mb-8 border border-white/10">
+                        <p class="text-[0.95rem] text-cyan-200 font-bold mb-3 leading-relaxed">"${item.desc}"</p>
+                        <p class="text-[11px] text-gray-400 leading-relaxed">• ${item.detail}</p>
                     </div>
-
-                    <div class="bg-white/5 rounded-xl p-5 mb-6 border border-white/10 shadow-inner">
-                        <p class="text-[1.05rem] text-cyan-200 font-medium leading-relaxed mb-4 break-keep">"${item.desc}"</p>
-                        <p class="text-sm text-gray-300 leading-relaxed break-keep">· ${item.detail}</p>
-                    </div>
-
-                    <div class="bg-[#10121a] border border-gray-700 rounded-2xl p-4 flex items-center gap-4 hover:border-indigo-500/50 transition-colors">
-                        <div class="w-[3.5rem] h-[3.5rem] rounded-[0.8rem] border border-indigo-500/60 flex flex-col items-center justify-center bg-indigo-900/20 flex-shrink-0">
-                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300 font-bold text-sm tracking-wide">안내</span>
+                    <div class="mt-8 border-t border-white/10 pt-8">
+                        <div class="flex items-center justify-between mb-5 px-1">
+                            <h4 class="text-white font-bold text-sm">📍 부스 위치 안내</h4>
+                            <span class="animate-booth text-[10px] font-black px-4 py-1.5 rounded-xl text-white">BOOTH #${item.booth}</span>
                         </div>
-                        <div class="flex-1">
-                            <h4 class="text-white font-bold text-sm mb-1.5">부스 위치 추후 업데이트</h4>
-                            <p class="text-gray-400 text-xs leading-relaxed break-keep">전시 부스로 이동하여 더욱 자세한 설명을 들으실 수 있습니다.<br>(현재 부스 위치는 미확정입니다.)</p>
+                        <div class="rounded-2xl border border-white/10 overflow-hidden bg-gray-900 shadow-xl">
+                            <img src="${mapUrl}" class="w-full h-auto block">
                         </div>
+                        <p class="text-gray-400 text-xs mt-5 text-center leading-relaxed font-medium">
+                            전시부스로 이동하시면</br> 더욱 자세한 설명을 들으실 수 있습니다.
+                        </p>
                     </div>
                 </div>
             `;
-            document.getElementById('solution-detail').innerHTML = detailHtml;
+
+            const nextBooth = (item.booth % 7) + 1;
+            const recSol = data.find(d => d.booth === nextBooth);
+            document.getElementById('rec-area').innerHTML = `
+                <div class="bg-gray-900/60 border border-white/10 rounded-2xl p-4 cursor-pointer active:scale-95 transition-all" onclick="showSolution(${recSol.id}, true)">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-[9px] font-bold text-blue-400 tracking-widest uppercase">Recommendation</span>
+                        <span class="text-[9px] font-bold text-gray-400 bg-white/5 px-2 py-0.5 rounded border border-white/10">BOOTH #${recSol.booth}</span>
+                    </div>
+                    <h5 class="text-white font-bold text-xs mb-1">${recSol.title}</h5>
+                    <p class="text-gray-500 text-[9px]">${recSol.keywords.join(' · ')}</p>
+                </div>
+            `;
+
+            if(!isDirect) for(let i=1; i<=3; i++) {
+                const el = document.getElementById(`load-${i}`);
+                if(el) el.classList.add('opacity-0');
+            }
             goToStep(3);
         }
 
         const listContainer = document.getElementById('painpoint-list');
         data.forEach(item => {
             const btn = document.createElement('div');
-            btn.className = 'glass-card px-5 py-4 cursor-pointer flex justify-between items-center group';
+            btn.className = 'glass-card flex items-start gap-4 p-5 cursor-pointer relative group';
             btn.onclick = () => showSolution(item.id);
             btn.innerHTML = `
-                <div class="flex items-start gap-3 flex-1 pr-2">
-                    <span class="text-[1.3rem] opacity-90 group-hover:scale-110 transition-transform mt-[2px]">${item.emoji}</span>
-                    <span class="text-[0.95rem] leading-normal font-medium text-gray-200 group-hover:text-cyan-300 transition-colors text-left break-keep">${item.pain}</span>
+                <div class="flex-shrink-0 text-xl mt-0.5">${item.emoji}</div>
+                <div class="flex-1 text-[0.92rem] font-semibold text-gray-200 leading-snug tracking-tight group-hover:text-white transition-colors">
+                    ${item.pain}
                 </div>
-                <span class="text-gray-500 group-hover:translate-x-1 group-hover:text-cyan-400 transition-all text-xl">→</span>
+                <div class="flex-shrink-0 self-center ml-1 opacity-20 group-hover:opacity-100 transition-opacity">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" class="text-gray-400"><path d="M9 5l7 7-7 7"></path></svg>
+                </div>
             `;
             listContainer.appendChild(btn);
         });
