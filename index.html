@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AI 도슨트 서비스</title>
+    <title>KT AI 도슨트 서비스</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <style>
@@ -111,9 +111,14 @@
 
         @keyframes booth-glow {
             0%, 100% { box-shadow: 0 0 15px var(--booth-color); filter: brightness(1); }
-            50% { box-shadow: 0 0 35px var(--booth-color), 0 0 50px var(--booth-color); filter: brightness(1.2); transform: scale(1.03); }
+            50% { box-shadow: 0 0 30px var(--booth-color), 0 0 50px var(--booth-color); filter: brightness(1.2); transform: scale(1.02); }
         }
         .animate-booth { background-color: var(--booth-color); animation: booth-glow 1.5s ease-in-out infinite; }
+
+        .solution-desc-box {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
     </style>
 </head>
 <body>
@@ -136,7 +141,6 @@
             </div>
             <button onclick="goToStep(2)" class="btn-primary w-full py-5 rounded-2xl text-lg font-bold shadow-xl">내 업무 문제 해결하기 →</button>
 
-            <!-- 수치 데이터 박스 추가 -->
             <div class="grid grid-cols-2 gap-4 mt-12 text-center text-xs text-gray-400 max-w-xs mx-auto">
                 <div class="glass-card p-5">
                     <div class="text-cyan-400 font-bold text-2xl mb-1">9</div>
@@ -152,7 +156,7 @@
         <!-- STEP 2: 리스트 -->
         <div id="step2" class="step-content">
             <button onclick="goToStep(1)" class="text-gray-400 text-sm mb-6 flex items-center gap-1 hover:text-white">← 처음으로</button>
-            <h2 class="text-xl font-bold mb-8 leading-snug">업무에서 느끼는<br><span class="text-cyan-400">가장 큰 어려움</span>을 선택해주세요.</h2>
+            <h2 class="text-xl font-bold mb-8 leading-snug px-1">업무에서 느끼는<br><span class="text-cyan-400">가장 큰 어려움</span>을 선택해주세요.</h2>
             <div class="flex flex-col gap-4 pb-20" id="painpoint-list"></div>
         </div>
 
@@ -181,13 +185,14 @@
                 <h2 class="text-2xl font-black mt-2 tracking-tight">최적의 솔루션을 찾았습니다!</h2>
             </div>
             <div id="solution-detail" class="glass-card p-6 mb-8 relative overflow-hidden">
-                <div id="top-accent-bar" class="absolute top-0 left-0 w-full h-1.5"></div>
+                <!-- JS에서 동적 삽입 -->
             </div>
+
             <div class="mb-10">
                 <h4 class="text-white font-bold mb-4 flex items-center gap-2 text-base px-1">✦ 함께 보면 좋은 솔루션</h4>
                 <div id="rec-area"></div>
             </div>
-            <button onclick="goToStep(2)" class="w-full py-4 rounded-xl border border-white/10 bg-white/5 text-gray-400 font-semibold transition-all">다른 고민 해결하기</button>
+            <button onclick="goToStep(2)" class="w-full py-5 rounded-2xl border border-white/10 bg-white/5 text-gray-300 font-bold transition-all text-base">다른 고민 해결하기</button>
         </div>
     </div>
 
@@ -233,24 +238,50 @@
             
             const detailContainer = document.getElementById('solution-detail');
             detailContainer.innerHTML = `
-                <div id="top-accent-bar" class="absolute top-0 left-0 w-full h-1.5" style="background-color: ${boothColor}"></div>
-                <div class="mb-4">
-                    <h3 class="text-xl font-black text-white mb-4 leading-tight">${item.title}</h3>
-                    <div class="flex flex-wrap gap-2 mb-6">${item.keywords.map(k => `<span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded-lg text-[10px] font-semibold text-cyan-300">${k}</span>`).join('')}</div>
-                    <div class="bg-white/5 rounded-2xl p-5 mb-8 border border-white/10">
-                        <p class="text-[0.95rem] text-cyan-200 font-bold mb-3 leading-relaxed">"${item.desc}"</p>
-                        <p class="text-[11px] text-gray-400 leading-relaxed">• ${item.detail}</p>
+                <div class="absolute top-0 left-0 w-full h-2" style="background-color: ${boothColor}"></div>
+                <div class="pt-2">
+                    <p class="text-cyan-400 text-[11px] font-bold mb-2 tracking-widest uppercase">AI Recommended Solution</p>
+                    <h3 class="text-2xl font-black text-white mb-5 leading-tight">${item.title}</h3>
+                    
+                    <div class="flex flex-wrap gap-2 mb-8">
+                        ${item.keywords.map(k => `
+                            <span class="px-3 py-1.5 bg-white/10 border border-white/20 rounded-lg text-xs font-bold text-cyan-300">
+                                #${k}
+                            </span>
+                        `).join('')}
                     </div>
-                    <div class="mt-8 border-t border-white/10 pt-8">
-                        <div class="flex items-center justify-between mb-5 px-1">
-                            <h4 class="text-white font-bold text-sm">📍 부스 위치 안내</h4>
-                            <span class="animate-booth text-[10px] font-black px-4 py-1.5 rounded-xl text-white">BOOTH #${item.booth}</span>
+
+                    <div class="solution-desc-box rounded-2xl p-6 mb-10">
+                        <!-- 이미지와 동일한 텍스트 컬러(민트색) 적용 및 크기 조정 -->
+                        <p class="text-[1.15rem] text-cyan-200 font-bold mb-4 leading-relaxed">
+                            "${item.desc}"
+                        </p>
+                        <!-- 이미지와 동일한 텍스트 컬러(회색) 적용 및 크기 조정 -->
+                        <p class="text-[14px] text-gray-400 leading-relaxed font-medium">
+                            • ${item.detail}
+                        </p>
+                    </div>
+
+                    <div class="mt-12 border-t border-white/10 pt-10">
+                        <div class="flex items-end justify-between mb-6 px-1">
+                            <div>
+                                <p class="text-cyan-400 text-[10px] font-bold mb-1 tracking-tighter uppercase">Booth Location</p>
+                                <h4 class="text-white font-black text-xl flex items-center gap-2">
+                                    📍 부스 위치 안내
+                                </h4>
+                            </div>
+                            <div class="animate-booth px-5 py-2.5 rounded-xl text-white text-sm font-black shadow-lg" style="background-color: ${boothColor}">
+                                BOOTH #${item.booth}
+                            </div>
                         </div>
-                        <div class="rounded-2xl border border-white/10 overflow-hidden bg-gray-900 shadow-xl">
-                            <img src="${mapUrl}" class="w-full h-auto block">
+                        
+                        <div class="rounded-2xl border border-white/20 overflow-hidden bg-gray-900 shadow-2xl">
+                            <img src="${mapUrl}" class="w-full h-auto block transform scale-105">
                         </div>
-                        <p class="text-gray-400 text-xs mt-5 text-center leading-relaxed font-medium">
-                            전시부스로 이동하시면</br> 더욱 자세한 설명을 들으실 수 있습니다.
+                        
+                        <p class="text-gray-400 text-[14px] mt-8 text-center leading-relaxed font-semibold bg-white/5 py-4 rounded-2xl border border-white/5">
+                            전시부스로 이동하시면<br/>
+                            <span class="text-white">더욱 자세한 설명과 시연</span>을 보실 수 있습니다.
                         </p>
                     </div>
                 </div>
@@ -259,13 +290,15 @@
             const nextBooth = (item.booth % 7) + 1;
             const recSol = data.find(d => d.booth === nextBooth);
             document.getElementById('rec-area').innerHTML = `
-                <div class="bg-gray-900/60 border border-white/10 rounded-2xl p-4 cursor-pointer active:scale-95 transition-all" onclick="showSolution(${recSol.id}, true)">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[9px] font-bold text-blue-400 tracking-widest uppercase">Recommendation</span>
-                        <span class="text-[9px] font-bold text-gray-400 bg-white/5 px-2 py-0.5 rounded border border-white/10">BOOTH #${recSol.booth}</span>
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-5 cursor-pointer active:scale-95 transition-all hover:bg-white/10" onclick="showSolution(${recSol.id}, true)">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-[10px] font-bold text-cyan-400 tracking-widest uppercase">Next Match</span>
+                        <span class="text-[10px] font-bold text-gray-300 bg-white/10 px-2.5 py-1 rounded-md border border-white/10">
+                            BOOTH #${recSol.booth}
+                        </span>
                     </div>
-                    <h5 class="text-white font-bold text-xs mb-1">${recSol.title}</h5>
-                    <p class="text-gray-500 text-[9px]">${recSol.keywords.join(' · ')}</p>
+                    <h5 class="text-white font-bold text-base mb-1">${recSol.title}</h5>
+                    <p class="text-gray-500 text-xs font-medium">${recSol.keywords.join(' · ')}</p>
                 </div>
             `;
 
@@ -279,15 +312,15 @@
         const listContainer = document.getElementById('painpoint-list');
         data.forEach(item => {
             const btn = document.createElement('div');
-            btn.className = 'glass-card flex items-start gap-4 p-5 cursor-pointer relative group';
+            btn.className = 'glass-card flex items-start gap-4 p-5 cursor-pointer relative group active:bg-white/10 transition-colors';
             btn.onclick = () => showSolution(item.id);
             btn.innerHTML = `
-                <div class="flex-shrink-0 text-xl mt-0.5">${item.emoji}</div>
-                <div class="flex-1 text-[0.92rem] font-semibold text-gray-200 leading-snug tracking-tight group-hover:text-white transition-colors">
+                <div class="flex-shrink-0 text-2xl mt-0.5">${item.emoji}</div>
+                <div class="flex-1 text-[15px] font-semibold text-gray-200 leading-snug tracking-tight group-hover:text-white transition-colors">
                     ${item.pain}
                 </div>
-                <div class="flex-shrink-0 self-center ml-1 opacity-20 group-hover:opacity-100 transition-opacity">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" class="text-gray-400"><path d="M9 5l7 7-7 7"></path></svg>
+                <div class="flex-shrink-0 self-center ml-1 opacity-30 group-hover:opacity-100 transition-opacity">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" class="text-gray-400"><path d="M9 5l7 7-7 7"></path></svg>
                 </div>
             `;
             listContainer.appendChild(btn);
